@@ -2,7 +2,7 @@
     "name": "nodejs",
     "version": "1.0.0",
     "description": "call up the environment data for leipziger strasse in chemnitz",
-    "main": "lqi.js",
+    "main": "index.js",
     "scripts": {
       "test": "echo \"Error: no test specified\" && exit 1",
       "prod": "node lqi.js"
