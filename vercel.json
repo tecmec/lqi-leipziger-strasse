@@ -1,7 +1,7 @@
 {
     "crons": [
         {
-            "path": "/cron",
+            "path": "/lqi",
             "schedule": "0 * * * *"
         }
     ]
