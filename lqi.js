@@ -177,7 +177,7 @@ async function postToBluesky(content) {
     }
 }
 
-async function main() {
+export async function main() {
     const airQualityData = await fetchAirQuality();
     if (!airQualityData) {
         console.error("Keine gültigen Daten gefunden.");
@@ -195,8 +195,12 @@ async function main() {
     if (asciiChart["status"] === true) {
         await postToBluesky(asciiChart);
     }
-}
 
-main().catch((error) => {
-    console.error("Ein unerwarteter Fehler ist aufgetreten:", error.message);
-});
+    res.setHeader("Content-Type", "application/json");
+
+    // Return a basic JSON response
+    res.status(200).json({
+        message: "Luftqualität Chemnitz App",
+        status: "running" // Todo: Hier sollte der letzte Post an Bluesky stehen
+    });
+}
