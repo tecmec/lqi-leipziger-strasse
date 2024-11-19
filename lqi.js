@@ -73,7 +73,6 @@ function calculateScale(value, component) {
 
     // Wenn der Wert außerhalb des gültigen Bereichs liegt, wird der Wert auf den entsprechenden Grenzwert gesetzt
     const scaledValue = Math.min(Math.max(value, limits.min), limits.max) * 100;
-    console.log(scaledValue);
 
     // Berechnung der Skala (z.B. für die Darstellung mit Sternen)
     const maxBars = 10; // Anzahl der maximalen "█"-Zeichen
@@ -144,7 +143,6 @@ function generateAscii(latestQualityData) {
 
             itsDangerousOutside = status > 1 ? false : true;
 
-            //console.log(component);
             const wert = parseFloat(latestQualityData[i][3]);
             if (isNaN(wert)) {
                 continue; // Falls der Wert nicht eine gültige Zahl ist, überspringe den aktuellen Eintrag
@@ -155,7 +153,6 @@ function generateAscii(latestQualityData) {
             const kurzBezeichnung = component[2];
 
             // Berechnung der Skala für den aktuellen Schadstoff
-            console.log(component[1]);
             const scaledValue = calculateScale(wert, component[1]);
 
             output += `${scaledValue} ${wert} `;
