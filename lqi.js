@@ -1,16 +1,13 @@
-const axios = require("axios"); // Für HTTP-Anfragen
-const { BskyAgent } = require("@atproto/api"); // Bluesky SDK
-require("dotenv").config(); // Um Umgebungsvariablen zu laden
+const axios = require("axios"); 
+const { BskyAgent } = require("@atproto/api");
+require("dotenv").config();
 
 // UBA-API-Konfiguration
-const UBA_API_URL =
-    "https://umweltbundesamt.api.proxy.bund.dev/api/air_data/v2/airquality/json";
+const UBA_API_URL = "https://umweltbundesamt.api.proxy.bund.dev/api/air_data/v2/airquality/json";
 const BLUESKY_HANDLE = process.env.BLUESKY_HANDLE;
 const BLUESKY_PASSWORD = process.env.BLUESKY_PASSWORD;
 
-const berlinTimeString = new Date().toLocaleString("en-EN", {
-    timeZone: "Europe/Berlin",
-});
+const berlinTimeString = new Date().toLocaleString("en-EN", {timeZone: "Europe/Berlin",});
 let now = new Date(berlinTimeString);
 let currentHour = now.getHours();
 
@@ -74,8 +71,8 @@ function calculateScale(value, component) {
     // Wenn der Wert außerhalb des gültigen Bereichs liegt, wird der Wert auf den entsprechenden Grenzwert gesetzt
     const scaledValue = Math.min(Math.max(value, limits.min), limits.max) * 100;
 
-    // Berechnung der Skala (z.B. für die Darstellung mit Sternen)
-    const maxBars = 10; // Anzahl der maximalen "█"-Zeichen
+    // Berechnung der Skala (z.B. für die Darstellung mit Emojis)
+    const maxBars = 10;
     const barLength = Math.floor(
         ((scaledValue - limits.min) / (limits.max - limits.min)) * maxBars,
     );
@@ -119,7 +116,6 @@ function getStatus(statusId) {
     return status;
 }
 
-// 2. ASCII-Diagramm erstellen
 function generateAscii(latestQualityData) {
     let output = ``;
     let itsDangerousOutside = false;
@@ -137,7 +133,6 @@ function generateAscii(latestQualityData) {
 
     for (let i = 0; i < latestQualityData.length; i++) {
         if (i > 2) {
-            // Skip first three entries
             const component = getComponentById(latestQualityData[i][0]);
             const status = getStatus(Number(latestQualityData[i][2]));
 
@@ -145,7 +140,7 @@ function generateAscii(latestQualityData) {
 
             const wert = parseFloat(latestQualityData[i][3]);
             if (isNaN(wert)) {
-                continue; // Falls der Wert nicht eine gültige Zahl ist, überspringe den aktuellen Eintrag
+                continue;
             }
 
             const massEinheit = component[3];
@@ -168,7 +163,6 @@ function generateAscii(latestQualityData) {
     };
 }
 
-// 3. Bluesky-Posting
 async function postToBluesky(content) {
     const agent = new BskyAgent({ service: "https://bsky.social" });
     try {
@@ -183,7 +177,6 @@ async function postToBluesky(content) {
     }
 }
 
-// 4. Hauptfunktion
 async function main() {
     const airQualityData = await fetchAirQuality();
     if (!airQualityData) {
@@ -204,7 +197,6 @@ async function main() {
     }
 }
 
-// Skript starten
 main().catch((error) => {
     console.error("Ein unerwarteter Fehler ist aufgetreten:", error.message);
 });
