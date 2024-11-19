@@ -2,19 +2,18 @@
     "name": "nodejs",
     "version": "1.0.0",
     "description": "call up the environment data for leipziger strasse in chemnitz",
-    "main": "index.js",
+    "main": "lqi.js",
     "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1",
-      "prod": "node lqi.js"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "prod": "node lqi.js"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
-      "@atproto/api": "^0.13.16",
-      "@types/node": "^18.0.6",
-      "axios": "^1.7.7",
-      "dotenv": "^16.4.5"
+        "@atproto/api": "^0.13.16",
+        "@types/node": "^18.0.6",
+        "axios": "^1.7.7",
+        "dotenv": "^16.4.5"
     }
-  }
-  
+}
