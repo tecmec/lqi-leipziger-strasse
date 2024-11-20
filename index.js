@@ -29,8 +29,9 @@ const components = {
         "2: Symbol - string",
         "3: Unit - string",
         "4: Translated name - string",
+        "5: URL - string",
     ],
-    PM10: ["1", "PM10", "PM₁₀", "µg/m³", "Feinstaub"],
+    PM10: ["1", "PM10", "PM₁₀", "µg/m³", "Feinstaub", "https://www.umweltbundesamt.at/umweltthemen/luft/luftschadstoffe/staub/pm10"],
     CO: ["2", "CO", "CO", "mg/m³", "Kohlenmonoxid"],
     O3: ["3", "O3", "O₃", "µg/m³", "Ozon"],
     SO2: ["4", "SO2", "SO₂", "µg/m³", "Schwefeldioxid"],
@@ -38,7 +39,7 @@ const components = {
     PM10PB: ["6", "PM10PB", "Pb", "µg/m³", "Blei im Feinstaub"],
     PM10BAP: ["7", "PM10BAP", "BaP", "ng/m³", "Benzo(a)pyren im Feinstaub"],
     CHB: ["8", "CHB", "C₆H₆", "µg/m³", "Benzol"],
-    PM2: ["9", "PM2", "PM₂,₅", "µg/m³", "Feinstaub"],
+    PM2: ["9", "PM2", "PM₂,₅", "µg/m³", "Feinstaub", "https://www.umweltbundesamt.at/umweltthemen/luft/luftschadstoffe/staub/pm25"],
     PM10AS: ["10", "PM10AS", "As", "ng/m³", "Arsen im Feinstaub"],
     PM10CD: ["11", "PM10CD", "Cd", "ng/m³", "Cadmium im Feinstaub"],
     PM10NI: ["12", "PM10NI", "Ni", "ng/m³", "Nickel im Feinstaub"],
@@ -154,7 +155,7 @@ function generateAscii(latestQualityData) {
             output += `${scaledValue} ${wert} `;
             output += `${massEinheit} (${kurzBezeichnung}/${langBezeichnung})\n`;
 
-            output += `Gesamtstatus: ${status}\n\n`;
+            output += `Gesamtstatus ([LQI](https://www.umweltbundesamt.de/berechnungsgrundlagen-luftqualitaetsindex)): ${status}\n\n`;
         }
     }
 
@@ -194,7 +195,7 @@ async function main() {
     console.log(asciiChart["output"]);
 
     if (asciiChart["status"] === true) {
-        await postToBluesky(asciiChart.output);
+       await postToBluesky(asciiChart.output);
     }
 }
 
