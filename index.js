@@ -1,5 +1,6 @@
 const axios = require("axios"); 
 const { BskyAgent } = require("@atproto/api");
+const { CronJob } = require('cron');
 require("dotenv").config();
 
 // UBA-API-Konfiguration
@@ -128,7 +129,7 @@ function generateAscii(latestQualityData) {
         hour: "2-digit",
         minute: "2-digit",
     });
-    output += `Luftqualität: Leipziger Straße (DESN083)\n`;
+    output += `Luftqualität: Leipziger Straße, Chemnitz (DESN083)\n`;
     output += timestamp + " Uhr\n\n";
 
     for (let i = 0; i < latestQualityData.length; i++) {
@@ -177,7 +178,7 @@ async function postToBluesky(content) {
     }
 }
 
-export async function main() {
+async function main() {
     const airQualityData = await fetchAirQuality();
     if (!airQualityData) {
         console.error("Keine gültigen Daten gefunden.");
@@ -193,14 +194,18 @@ export async function main() {
     console.log(asciiChart["output"]);
 
     if (asciiChart["status"] === true) {
-        await postToBluesky(asciiChart);
+        await postToBluesky(asciiChart.output);
     }
-
-    res.setHeader("Content-Type", "application/json");
-
-    // Return a basic JSON response
-    res.status(200).json({
-        message: "Luftqualität Chemnitz App",
-        status: "running" // Todo: Hier sollte der letzte Post an Bluesky stehen
-    });
 }
+
+main().catch((error) => {
+    console.error("Ein unerwarteter Fehler ist aufgetreten:", error.message);
+}); 
+
+// Run this on a cron job
+const scheduleExpressionMinute = '* * * * *'; // Run once every minute for testing
+const scheduleExpressionTenMinutesAfterFullHour = '10 * * * *'; // Run once ten minutes after every full hour in prod
+
+const job = new CronJob(scheduleExpressionTenMinutesAfterFullHour, main); // change to scheduleExpressionMinute for testing
+
+job.start();
