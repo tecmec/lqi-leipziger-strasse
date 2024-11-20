@@ -155,7 +155,7 @@ function generateAscii(latestQualityData) {
             output += `${scaledValue} ${wert} `;
             output += `${massEinheit} (${kurzBezeichnung}/${langBezeichnung})\n`;
 
-            output += `Gesamtstatus ([LQI](https://t.ly/HFVeR)): ${status}\n\n`;
+            output += `Gesamtstatus (<a href="https://t.ly/HFVeR">LQI</a>): ${status}\n\n`;
         }
     }
 
