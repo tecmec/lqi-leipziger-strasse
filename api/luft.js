@@ -202,7 +202,7 @@ export async function main() {
     console.log(asciiChart["output"]);
 
     if (asciiChart["status"] === true) {
-       //await postToBluesky(asciiChart.output);
+       await postToBluesky(asciiChart.output);
     }
 }
 
