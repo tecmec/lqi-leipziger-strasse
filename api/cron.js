@@ -1,5 +1,11 @@
+// prevent caching
+export const dynamic = 'force-dynamic';
+
 // api/cron.js
-export default function handler(req, res) {
+/*export default function handler(req, res) {
+
+    
+
     // Dein Skript, das zyklisch ausgeführt werden soll
     console.log("Das Skript wird ausgeführt.");
 
@@ -8,4 +14,8 @@ export default function handler(req, res) {
         message: "Skript ausgeführt",
         time: new Date().toISOString(),
     });
-}
+}*/
+
+export function GET(request) {
+    return new Response(`Hello from ${process.env.VERCEL_REGION}`);
+  }
