@@ -155,7 +155,7 @@ function generateAscii(latestQualityData) {
             output += `${scaledValue} ${wert} `;
             output += `${massEinheit} (${kurzBezeichnung}/${langBezeichnung})\n`;
 
-            output += `Gesamtstatus ([LQI](https://www.umweltbundesamt.de/berechnungsgrundlagen-luftqualitaetsindex)): ${status}\n\n`;
+            output += `Gesamtstatus ([LQI](https://t.ly/HFVeR)): ${status}\n\n`;
         }
     }
 
