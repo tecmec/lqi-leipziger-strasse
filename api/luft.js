@@ -9,8 +9,15 @@ const BLUESKY_HANDLE = process.env.BLUESKY_HANDLE;
 const BLUESKY_PASSWORD = process.env.BLUESKY_PASSWORD;
 
 const berlinTimeString = new Date().toLocaleString("en-EN", {timeZone: "Europe/Berlin",});
-let now = new Date(berlinTimeString);
-let currentHour = now.getHours();
+const now = new Date(berlinTimeString);
+const yesterday = new Date(now.getDate() - 1);
+const currentHour = now.getHours();
+const currentDate = now.toISOString().split('T')[0];
+const yesterdayDate = yesterday.toISOString().split('T')[0];
+
+console.log(
+    currentHour, currentDate, yesterdayDate
+)
 
 const airQualityLimits = {
     PM10: { min: 0, max: 100 },
@@ -31,7 +38,7 @@ const components = {
         "4: Translated name - string",
         "5: URL - string",
     ],
-    PM10: ["1", "PM10", "PM₁₀", "µg/m³", "Feinstaub", "https://www.umweltbundesamt.at/umweltthemen/luft/luftschadstoffe/staub/pm10"],
+    PM10: ["1", "PM10", "PM₁₀", "µg/m³", "Feinstaub"],
     CO: ["2", "CO", "CO", "mg/m³", "Kohlenmonoxid"],
     O3: ["3", "O3", "O₃", "µg/m³", "Ozon"],
     SO2: ["4", "SO2", "SO₂", "µg/m³", "Schwefeldioxid"],
@@ -39,7 +46,7 @@ const components = {
     PM10PB: ["6", "PM10PB", "Pb", "µg/m³", "Blei im Feinstaub"],
     PM10BAP: ["7", "PM10BAP", "BaP", "ng/m³", "Benzo(a)pyren im Feinstaub"],
     CHB: ["8", "CHB", "C₆H₆", "µg/m³", "Benzol"],
-    PM2: ["9", "PM2", "PM₂,₅", "µg/m³", "Feinstaub", "https://www.umweltbundesamt.at/umweltthemen/luft/luftschadstoffe/staub/pm25"],
+    PM2: ["9", "PM2", "PM₂,₅", "µg/m³", "Feinstaub"],
     PM10AS: ["10", "PM10AS", "As", "ng/m³", "Arsen im Feinstaub"],
     PM10CD: ["11", "PM10CD", "Cd", "ng/m³", "Cadmium im Feinstaub"],
     PM10NI: ["12", "PM10NI", "Ni", "ng/m³", "Nickel im Feinstaub"],
@@ -50,8 +57,8 @@ async function fetchAirQuality() {
         const response = await axios.get(UBA_API_URL, {
             params: {
                 station: "1671", // Leipziger Straße
-                date_from: "2024-11-19",
-                date_to: "2024-11-19",
+                date_from: yesterdayDate,
+                date_to: currentDate,
                 time_from: "1",
                 time_to: currentHour.toString,
                 lang: "en",
@@ -155,7 +162,7 @@ function generateAscii(latestQualityData) {
             output += `${scaledValue} ${wert} `;
             output += `${massEinheit} (${kurzBezeichnung}/${langBezeichnung})\n`;
 
-            output += `Gesamtstatus (<a href="https://t.ly/HFVeR">LQI</a>): ${status}\n\n`;
+            output += `Gesamtstatus (LQI): ${status}\n\n`;
         }
     }
 
@@ -179,7 +186,7 @@ async function postToBluesky(content) {
     }
 }
 
-async function main() {
+export async function main() {
     const airQualityData = await fetchAirQuality();
     if (!airQualityData) {
         console.error("Keine gültigen Daten gefunden.");
@@ -195,18 +202,18 @@ async function main() {
     console.log(asciiChart["output"]);
 
     if (asciiChart["status"] === true) {
-       await postToBluesky(asciiChart.output);
+       //await postToBluesky(asciiChart.output);
     }
 }
 
-main().catch((error) => {
+/*main().catch((error) => {
     console.error("Ein unerwarteter Fehler ist aufgetreten:", error.message);
-}); 
+});*/
 
 // Run this on a cron job
-const scheduleExpressionMinute = '* * * * *'; // Run once every minute for testing
+/*const scheduleExpressionMinute = '* * * * *'; // Run once every minute for testing
 const scheduleExpressionTenMinutesAfterFullHour = '10 * * * *'; // Run once ten minutes after every full hour in prod
 
 const job = new CronJob(scheduleExpressionTenMinutesAfterFullHour, main); // change to scheduleExpressionMinute for testing
 
-job.start();
+job.start();*/

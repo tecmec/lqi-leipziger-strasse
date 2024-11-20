@@ -4,8 +4,7 @@
     "description": "call up the environment data for leipziger strasse in chemnitz",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "prod": "node index.js"
+        "test": "node app/index.js"
     },
     "keywords": [],
     "author": "",
