@@ -3,21 +3,19 @@ const { BskyAgent } = require("@atproto/api");
 const { CronJob } = require('cron');
 require("dotenv").config();
 
-// UBA-API-Konfiguration
 const UBA_API_URL = "https://umweltbundesamt.api.proxy.bund.dev/api/air_data/v2/airquality/json";
 const BLUESKY_HANDLE = process.env.BLUESKY_HANDLE;
 const BLUESKY_PASSWORD = process.env.BLUESKY_PASSWORD;
 
 const berlinTimeString = new Date().toLocaleString("en-EN", {timeZone: "Europe/Berlin",});
 const now = new Date(berlinTimeString);
-const yesterday = new Date(now.getDate() - 1);
+
+const yesterday = new Date(now);
+yesterday.setDate(now.getDate() - 1);
+
 const currentHour = now.getHours();
 const currentDate = now.toISOString().split('T')[0];
 const yesterdayDate = yesterday.toISOString().split('T')[0];
-
-console.log(
-    currentHour, currentDate, yesterdayDate
-)
 
 const airQualityLimits = {
     PM10: { min: 0, max: 100 },
@@ -54,16 +52,15 @@ const components = {
 
 async function fetchAirQuality() {
     try {
-        const response = await axios.get(UBA_API_URL, {
-            params: {
-                station: "1671", // Leipziger Straße
-                date_from: yesterdayDate,
-                date_to: currentDate,
-                time_from: "1",
-                time_to: currentHour.toString,
-                lang: "en",
-            },
-        });
+        const params = {
+            station: "1671", // Leipziger Straße
+            date_from: yesterdayDate,
+            date_to: currentDate,
+            time_from: "1",
+            time_to: currentHour.toString(),
+            lang: "en",
+        };
+        const response = await axios.get(UBA_API_URL, {params});
         return response.data.data["1671"];
     } catch (error) {
         console.error(
@@ -187,11 +184,15 @@ async function postToBluesky(content) {
 }
 
 export async function main() {
+    console.log(1)
     const airQualityData = await fetchAirQuality();
+    console.log(airQualityData);
     if (!airQualityData) {
         console.error("Keine gültigen Daten gefunden.");
         return;
     }
+
+    console.log(2)
 
     const airQualityDataCollection = Object.keys(airQualityData);
     const latestTimestamp =
@@ -201,6 +202,7 @@ export async function main() {
 
     console.log(asciiChart["output"]);
 
+    console.log(3)
     if (asciiChart["status"] === true) {
        await postToBluesky(asciiChart.output);
     }

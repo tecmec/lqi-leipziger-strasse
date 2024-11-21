@@ -2,9 +2,9 @@
     "name": "nodejs",
     "version": "1.0.0",
     "description": "call up the environment data for leipziger strasse in chemnitz",
-    "main": "index.js",
+    "main": "app/serve.js",
     "scripts": {
-        "test": "node app/index.js"
+        "test": "node app/serve.js"
     },
     "keywords": [],
     "author": "",
